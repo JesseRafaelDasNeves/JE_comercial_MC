@@ -13,9 +13,9 @@
             </f:facet>
         </h:head>
 
-        <h:body>
+        <h:body  >
 
-            <p:layout fullPage="true">
+            <p:layout fullPage="true" >
 
                 <p:layoutUnit position="north" size="70" resizable="false" closable="true" collapsible="false" >
                     
@@ -26,10 +26,10 @@
                 </p:layoutUnit>
 
 
-                <p:layoutUnit position="west" size="175" header="Único" collapsible="true">
+                <p:layoutUnit position="west" size="175" header="#{BeanPrincipal.getModuloAtualBySessao().getTitulo()}" collapsible="true" transient="true">
                     
                     <ui:insert>
-                        <ui:include src="include/unico/menu_modulo.xhtml" />
+                        <ui:include src="#{BeanPrincipal.getPathMenuModulo()}" />
                     </ui:insert>
 
                 </p:layoutUnit>
@@ -38,7 +38,7 @@
                 <p:layoutUnit position="center">
                     
                     <ui:insert>
-                        <ui:include src="include/unico/consulta_pessoa.xhtml" />
+                        <ui:include src="#{BeanPrincipal.getPathFormulario()}" />
                     </ui:insert>
                     
                 </p:layoutUnit>

@@ -2,28 +2,34 @@ package controller;
 
 import dao.DaoPessoa;
 import java.util.ArrayList;
+import java.util.List;
 import javax.faces.bean.ManagedBean;
 import model.ModelPessoa;
 
 @ManagedBean(name = "ControllerBeanConsultaPessoa")
-public class ControllerConsultaPessoa {
+public class ControllerConsultaPessoa extends BeanPadrao {
 
+    private ModelPessoa registrosSelecionado;
+    
+    
+    
     public ArrayList<ModelPessoa> getAllRegistros() {
-        
-        DaoPessoa oDaoPessoa = new DaoPessoa();
-        oDaoPessoa.getAll();
-        
+        DaoPessoa oDaoPessoa          = new DaoPessoa();
+        List pessoas                  = oDaoPessoa.getAll();
         ArrayList<ModelPessoa> oLista = new ArrayList<>();
         
-        for(int i = 1; i <= 30; i ++) {
-            ModelPessoa oPessoa = new ModelPessoa();
-            oPessoa.setCodigo(i);
-            oPessoa.setCpfCnpj("064.205.879.21");
-            oPessoa.setNome("Joaquim " + i);
-
-            oLista.add(oPessoa);
+        for(int i = 0; i < pessoas.size(); i ++) {
+            oLista.add((ModelPessoa) pessoas.get(i));
         }
         
         return oLista;
+    }
+
+    public void setRegistrosSelecionados(ModelPessoa registrosSelecionado) {
+        this.registrosSelecionado = registrosSelecionado;
+    }
+
+    public ModelPessoa getRegistrosSelecionado() {
+        return registrosSelecionado;
     }
 }

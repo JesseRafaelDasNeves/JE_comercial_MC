@@ -1,9 +1,11 @@
 package dao;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  *
@@ -21,7 +23,7 @@ public abstract class Dao {
     
     private EntityManager getInstanceEntity() {
         if(this.EntityManager == null) {
-            EntityManagerFactory oEntityFactory = Persistence.createEntityManagerFactory("UNICO_PU");
+            EntityManagerFactory oEntityFactory = Persistence.createEntityManagerFactory(this.getPersistenceName());
             this.EntityManager = oEntityFactory.createEntityManager();
         }
         
@@ -54,8 +56,9 @@ public abstract class Dao {
         }
     }
     
-    public void getAll() {
-        FlushModeType teste = EntityManager.getFlushMode();
+    public List getAll() {        
+        Query consulta = this.EntityManager.createQuery("select pessoa from ModelPessoa pessoa");
+        return consulta.getResultList();
     }
     
     public void begin() {

@@ -9,8 +9,9 @@
     
         
     <ui:composition>
-
+        
         <p:dataTable var="Pessoa" 
+                     id="consulta_pessoa"
                      rows="12"
                      rowsPerPageTemplate="6,12,30,60,100"
                      paginatorPosition="bottom"
@@ -20,7 +21,15 @@
                      resizableColumns="true"
                      rowSelectMode="checkbox"
                      value="#{ControllerBeanConsultaPessoa.getAllRegistros()}"
+                     rowKey="#{Pessoa.codigo}"
+                     selection="#{ControllerBeanConsultaPessoa.registrosSelecionado}"
         >
+            
+            <f:facet name="header">
+                Consulta de Pessoa
+            </f:facet>
+            
+            <p:column selectionMode="single" style="width:16px;text-align:center"/>
             
             <p:column width="18%" headerText="Código">
                 <h:outputLabel value="#{Pessoa.codigo}" />
@@ -34,8 +43,27 @@
                 <h:outputLabel value="#{Pessoa.cpfCnpj}" />
             </p:column>
             
+            <f:facet name="footer">
+                <p:commandButton process="consulta_pessoa" update="detalhesPessoa" icon="ui-icon-circle-plus" value="Incluir" oncomplete="PF('dialog_manutencao_pessoa').show()" />
+            </f:facet>
+            
         </p:dataTable>
 
+        <p:dialog header="Alterar Pessoa" widgetVar="dialog_manutencao_pessoa" modal="true" showEffect="fade" hideEffect="fade" resizable="true">
+            <p:outputPanel id="detalhesPessoa" style="text-align:center;">
+                <p:panelGrid  columns="2"  columnClasses="label,value">
+                    <h:outputText value="Código:" />
+                    <h:inputText value="#{ControllerBeanConsultaPessoa.registrosSelecionado.codigo}" />
+
+                    <h:outputText value="Nome:" />
+                    <h:inputText value="#{ControllerBeanConsultaPessoa.registrosSelecionado.nome}" />
+
+                    <h:outputText value="CPF/CNPJ:" />
+                    <h:inputText value="#{ControllerBeanConsultaPessoa.registrosSelecionado.cpfCnpj}" />
+                </p:panelGrid>
+            </p:outputPanel>
+        </p:dialog>
+        
     </ui:composition>
     
 </html>
