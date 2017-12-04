@@ -5,66 +5,165 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui" 
->
-    
-        
-    <ui:composition>
-        
-        <p:dataTable var="Pessoa" 
-                     id="consulta_pessoa"
-                     rows="12"
-                     rowsPerPageTemplate="6,12,30,60,100"
-                     paginatorPosition="bottom"
-                     scrollable="true"
-                     scrollHeight="98%"
-                     paginator="true"
-                     resizableColumns="true"
-                     rowSelectMode="checkbox"
-                     value="#{ControllerBeanConsultaPessoa.getAllRegistros()}"
-                     rowKey="#{Pessoa.codigo}"
-                     selection="#{ControllerBeanConsultaPessoa.registrosSelecionado}"
-        >
-            
-            <f:facet name="header">
-                Consulta de Pessoa
-            </f:facet>
-            
-            <p:column selectionMode="single" style="width:16px;text-align:center"/>
-            
-            <p:column width="18%" headerText="Código">
-                <h:outputLabel value="#{Pessoa.codigo}" />
-            </p:column>
-            
-            <p:column headerText="Nome">
-                <h:outputLabel value="#{Pessoa.nome}" />
-            </p:column>
-            
-            <p:column width="20%" headerText="CPF/CNPJ">
-                <h:outputLabel value="#{Pessoa.cpfCnpj}" />
-            </p:column>
-            
-            <f:facet name="footer">
-                <p:commandButton process="consulta_pessoa" update="detalhesPessoa" icon="ui-icon-circle-plus" value="Incluir" oncomplete="PF('dialog_manutencao_pessoa').show()" />
-            </f:facet>
-            
-        </p:dataTable>
+      >
 
-        <p:dialog header="Alterar Pessoa" widgetVar="dialog_manutencao_pessoa" modal="true" showEffect="fade" hideEffect="fade" resizable="true">
-            <p:outputPanel id="detalhesPessoa" style="text-align:center;">
-                <p:panelGrid  columns="2"  columnClasses="label,value">
-                    <h:outputText value="Código:" />
-                    <h:inputText value="#{ControllerBeanConsultaPessoa.registrosSelecionado.codigo}" />
+    <ui:composition template="/principal.xhtml">
 
-                    <h:outputText value="Nome:" />
-                    <h:inputText value="#{ControllerBeanConsultaPessoa.registrosSelecionado.nome}" />
+        <ui:define name="center">
 
-                    <h:outputText value="CPF/CNPJ:" />
-                    <h:inputText value="#{ControllerBeanConsultaPessoa.registrosSelecionado.cpfCnpj}" />
-                </p:panelGrid>
-            </p:outputPanel>
-        </p:dialog>
-        
+            <h:form id="form_pessoa" style="max-height: 100%;" >
+
+                <p:growl id="message" life="10000"  />
+
+                <p:dataTable id="consulta_pessoa"
+                             var="Pessoa" 
+                             rows="12"
+                             rowsPerPageTemplate="6,12,30,60,100"
+                             paginatorPosition="bottom"
+                             scrollable="true"
+                             scrollHeight="98%"
+                             paginator="true"
+                             resizableColumns="true"
+                             rowSelectMode="checkbox"
+                             value="#{BeanPessoa.pessoas}"
+                             rowKey="#{Pessoa.codigo}"
+                             selection="#{BeanPessoa.registroSelecionado}"
+                             >
+
+                    <f:facet name="header">
+                        Consulta de Pessoa
+                    </f:facet>
+
+                    <p:column selectionMode="single" style="width:16px;text-align:center"/>
+
+                    <p:column width="10%" headerText="Código">
+                        <h:outputLabel value="#{Pessoa.codigo}" />
+                    </p:column>
+
+                    <p:column width="10%" headerText="Tipo">
+                        <h:outputLabel value="#{Pessoa.descricaoTipoPessoa}" />
+                    </p:column>
+                    
+                    <p:column headerText="Nome">
+                        <h:outputLabel value="#{Pessoa.nome}" />
+                    </p:column>
+
+                    <p:column width="20%" headerText="CPF/CNPJ">
+                        <h:outputLabel value="#{Pessoa.cpfCnpj}" />
+                    </p:column>
+
+                    <f:facet name="footer">
+                        
+                        <p:commandButton process="consulta_pessoa"
+                                         update=":form_pessoa:grid_man_pessoa_inclusao"
+                                         icon="ui-icon-circle-plus"
+                                         value="Incluir"
+                                         oncomplete="PF('dialog_manutencao_pessoa_inclusao').show()" 
+                        />
+                        
+                        <p:commandButton process="consulta_pessoa"
+                                         update=":form_pessoa:grid_man_pessoa"
+                                         icon="ui-icon-link"
+                                         value="Alterar"
+                                         oncomplete="PF('dialog_manutencao_pessoa').show()" 
+                        />
+                        
+                        <p:commandButton process="consulta_pessoa"
+                                         update=":form_pessoa:consulta_pessoa, :form_pessoa:message"
+                                         icon="ui-icon-circle-minus"
+                                         value="Excluir"
+                                         action="#{BeanPessoa.excluir}">
+                            <p:confirm header="Confirmação" message="Deseja realmente excluir registro?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                        
+                    </f:facet>
+
+                </p:dataTable>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+                
+                <p:dialog header="Alterar Pessoa" 
+                          widgetVar="dialog_manutencao_pessoa" 
+                          modal="false"
+                          showEffect="fade"
+                          hideEffect="fade"
+                          resizable="true"
+                          >
+
+                    <p:outputPanel id="grid_man_pessoa" style="text-align:center;">
+                        <p:panelGrid  columns="2" columnClasses="label,value">
+                            <h:outputText value="Código:" />
+                            <h:inputText value="#{BeanPessoa.registroSelecionado.codigo}" readonly="true" style="background-color: slategray;" />
+
+                            <h:outputText value="Tipo:" />
+                            <p:selectOneMenu value="#{BeanPessoa.registroSelecionado.tipo}">
+                                <f:selectItem itemLabel="Selecione..." itemValue="" />
+                                <f:selectItems value="#{BeanPessoa.listaTipoPessoa}" var="listaTipo" itemValue="#{listaTipo.codigo}" itemLabel="#{listaTipo.valor}" />
+                            </p:selectOneMenu>
+                            
+                            <h:outputText value="Nome:" />
+                            <h:inputText value="#{BeanPessoa.registroSelecionado.nome}" />
+
+                            <h:outputText value="CPF/CNPJ:" />
+                            <h:inputText value="#{BeanPessoa.registroSelecionado.cpfCnpj}" />
+
+                        </p:panelGrid>    
+                        <p:commandButton process="grid_man_pessoa"
+                                         update=":form_pessoa:message, :form_pessoa:consulta_pessoa"
+                                         value="Confirmar"
+                                         action="#{BeanPessoa.salvar}"
+                                         oncomplete="PF('dialog_manutencao_pessoa').hide()"
+                                         />
+                    </p:outputPanel>
+
+                </p:dialog>
+
+                
+                <p:dialog header="Incluir Pessoa" 
+                          widgetVar="dialog_manutencao_pessoa_inclusao" 
+                          modal="false"
+                          showEffect="fade"
+                          hideEffect="fade"
+                          resizable="true"
+                          >
+
+                    <p:outputPanel id="grid_man_pessoa_inclusao" style="text-align:center;">
+                        <p:panelGrid  columns="2" columnClasses="label,value" >
+                            <h:outputText value="Código:" />
+                            <h:inputText value="#{BeanPessoa.registroNovo.codigo}" readonly="true" style="background-color: slategray;" />
+
+                            <h:outputText value="Tipo:" />
+                            <p:selectOneMenu id="tipo_pessoa" value="#{BeanPessoa.registroNovo.tipo}">
+                                <f:selectItem itemLabel="Selecione..." itemValue="" />
+                                <f:selectItems value="#{BeanPessoa.listaTipoPessoa}" var="listaTipo" itemValue="#{listaTipo.codigo}" itemLabel="#{listaTipo.valor}" />
+                            </p:selectOneMenu>
+                            
+                            <h:outputText value="Nome:" />
+                            <h:inputText value="#{BeanPessoa.registroNovo.nome}" style="width: 200px;" />
+
+                            <h:outputText value="CPF/CNPJ:" />
+                            <h:inputText value="#{BeanPessoa.registroNovo.cpfCnpj}" />
+
+                        </p:panelGrid>    
+                        <p:commandButton process="grid_man_pessoa_inclusao"
+                                         update=":form_pessoa:message, :form_pessoa:consulta_pessoa"
+                                         value="Confirmar"
+                                         action="#{BeanPessoa.salvarNovo}"
+                                         oncomplete="PF('dialog_manutencao_pessoa_inclusao').hide()"
+                                         />
+                    </p:outputPanel>
+
+                </p:dialog>
+                
+                
+            </h:form>
+
+        </ui:define>
+
     </ui:composition>
-    
+
 </html>
 

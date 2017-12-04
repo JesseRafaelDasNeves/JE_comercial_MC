@@ -29,7 +29,7 @@ public class Sessao {
     }
     
     public void atualizaModulo() {
-        String modulo = BeanPrincipal.getParametro("modulo");
+        String modulo = ControllerPrincipal.getParametro("modulo");
         if(modulo != null && !modulo.trim().equals("")) {
             this.setAtributo("codigo_modulo", modulo);
         }

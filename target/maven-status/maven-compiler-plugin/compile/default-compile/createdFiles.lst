@@ -1,0 +1,13 @@
+controller\ControllerPessoa.class
+model\Lista.class
+model\ModelModulo.class
+services\PessoaService.class
+dao\DaoModule.class
+model\ModelPessoa_.class
+model\ModelPessoa.class
+dao\Dao.class
+controller\ControllerPadrao.class
+controller\Sessao.class
+dao\DaoUnico.class
+controller\ControllerPrincipal.class
+dao\DaoPessoa.class

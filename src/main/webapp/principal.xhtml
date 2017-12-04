@@ -3,7 +3,8 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+>
 
     <f:view contentType="text/html">
         <h:head>
@@ -19,16 +20,16 @@
 
                 <p:layoutUnit position="north" size="70" resizable="false" closable="true" collapsible="false" >
                     
-                    <ui:insert>
+                    <ui:insert name="north" >
                         <ui:include src="structure/menu_sistema.xhtml" />
                     </ui:insert>
                     
                 </p:layoutUnit>
 
 
-                <p:layoutUnit position="west" size="175" header="#{BeanPrincipal.getModuloAtualBySessao().getTitulo()}" collapsible="true" transient="true">
+                <p:layoutUnit position="west" size="175" header="#{BeanPrincipal.getModuloAtualBySessao().getTitulo()}" collapsible="true" transient="true" >
                     
-                    <ui:insert>
+                    <ui:insert name="west" >
                         <ui:include src="#{BeanPrincipal.getPathMenuModulo()}" />
                     </ui:insert>
 
@@ -37,15 +38,15 @@
                 
                 <p:layoutUnit position="center">
                     
-                    <ui:insert>
-                        <ui:include src="#{BeanPrincipal.getPathFormulario()}" />
+                    <ui:insert name="center" >
+                        <ui:include src="structure/centroPadrao.xhtml" />
                     </ui:insert>
                     
                 </p:layoutUnit>
                 
                 
                 <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
-                    Footer
+                    JE Sistema...
                 </p:layoutUnit>
 
             </p:layout>

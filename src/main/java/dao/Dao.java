@@ -3,7 +3,6 @@ package dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
@@ -38,7 +37,12 @@ public abstract class Dao {
             return true;
         } catch(Exception e) {
             System.out.println(e.getMessage());
-            this.rollback();
+            try {
+                this.rollback();
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+                return false;
+            }
             return false;
         }
     }
@@ -46,19 +50,39 @@ public abstract class Dao {
     public boolean excluir(Object oModel) {
         this.begin();
         try {
-            this.EntityManager.remove(oModel);
+            Object oRemove = oModel;
+            if(!this.EntityManager.contains(oModel)) {
+                oRemove = this.EntityManager.merge(oModel);
+            }
+            this.EntityManager.remove(oRemove);
             this.commit();
             return true;
         } catch(Exception e) {
             System.out.println(e.getMessage());
-            this.rollback();
+            try {
+                this.rollback();
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+                return false;
+            }
             return false;
         }
     }
     
     public List getAll() {        
-        Query consulta = this.EntityManager.createQuery("select pessoa from ModelPessoa pessoa");
+        Query consulta = this.EntityManager.createQuery("select pessoa from ModelPessoa pessoa order by pessoa.codigo asc");
         return consulta.getResultList();
+    }
+    
+    public Object getFromId(Class classe, int id) {
+        Object obj = null;
+        try{
+            obj = this.EntityManager.find(classe, id);
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return obj;
     }
     
     public void begin() {
