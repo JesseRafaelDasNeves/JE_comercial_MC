@@ -6,6 +6,7 @@
 package dao;
 
 import java.util.ArrayList;
+import javax.persistence.Query;
 import model.ModelModulo;
 
 /**
@@ -17,8 +18,9 @@ public class DaoModule extends DaoUnico {
     public static ArrayList<ModelModulo> getAllModulo() {
         ArrayList<ModelModulo> oLista = new ArrayList<>();
         oLista.add(getModuloDefault());
-        oLista.add(new ModelModulo(1001, "crm", "CRM"));
-        oLista.add(new ModelModulo(1002, "vendas", "Vendas"));
+        oLista.add(new ModelModulo(1001, "crm"     , "CRM"));
+        oLista.add(new ModelModulo(1002, "vendas"  , "Vendas"));
+        oLista.add(new ModelModulo(1003, "settings", "Gerenciar Sistema"));
         
         return oLista;
     }
@@ -38,5 +40,10 @@ public class DaoModule extends DaoUnico {
         }
         
         return oRetorno != null ? oRetorno : getModuloDefault();
+    }
+
+    @Override
+    public Query getQueryAll() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

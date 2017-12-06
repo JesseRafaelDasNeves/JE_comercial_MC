@@ -1,5 +1,6 @@
 package dao;
 
+import controller.ControllerPadrao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,13 +13,15 @@ import javax.persistence.Query;
  */
 public abstract class Dao {
     
-    private EntityManager EntityManager;
+    protected EntityManager EntityManager;
     
     protected Dao() {
         this.EntityManager = this.getInstanceEntity();
     }
     
     protected abstract String getPersistenceName();
+    
+    public abstract Query getQueryAll();
     
     private EntityManager getInstanceEntity() {
         if(this.EntityManager == null) {
@@ -69,10 +72,18 @@ public abstract class Dao {
         }
     }
     
-    public List getAll() {        
-        Query consulta = this.EntityManager.createQuery("select pessoa from ModelPessoa pessoa order by pessoa.codigo asc");
-        return consulta.getResultList();
+    public List getAll() {
+        List oRetorno  = null;
+        Query consulta = this.getQueryAll();
+        try {
+            oRetorno = consulta.getResultList();
+        } catch (Exception e) {
+            ControllerPadrao.addMessageErro("Erro ao buscar dados.");
+        }
+        
+        return oRetorno;
     }
+    
     
     public Object getFromId(Class classe, int id) {
         Object obj = null;

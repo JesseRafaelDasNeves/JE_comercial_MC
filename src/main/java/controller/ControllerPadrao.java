@@ -45,4 +45,9 @@ public abstract class ControllerPadrao {
         FacesMessage message = new FacesMessage(severity, textoMsg,  null);
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
+    
+    public static void addMessageErro(String msg) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg,  null);
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
 }

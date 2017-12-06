@@ -5,13 +5,14 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
 >
-
+    
     <f:view contentType="text/html">
         <h:head>
             <f:facet name="first">
                 <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
                 <title>JE Comercial MC</title>
             </f:facet>
+            <link rel="stylesheet" type="text/css" href="/JeComerciaMt/faces/structure/css/estilo.css" />
         </h:head>
 
         <h:body  >
@@ -47,6 +48,15 @@
                 
                 <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
                     JE Sistema...
+                    Estilo:
+                    <h:form id="form_contato" style="max-height: 100%;" >
+
+                        <p:themeSwitcher label="Estilo"  value="#{sessao.tema}">
+                            <f:selectItems value="#{sessao.temas}" />
+                            <p:ajax listener="#{sessao.salvaTema}"/>
+                        </p:themeSwitcher>
+
+                    </h:form>
                 </p:layoutUnit>
 
             </p:layout>

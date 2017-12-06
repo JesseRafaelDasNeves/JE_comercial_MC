@@ -1,0 +1,164 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" 
+      >
+
+    <ui:composition template="/principal.xhtml">
+        
+        <ui:define name="center">
+
+            <h:form id="form_contato" style="max-height: 100%;" >
+
+                <p:growl id="message" life="10000"  />
+
+                <p:dataTable id="consulta_contato"
+                             var="Contato" 
+                             rows="12"
+                             rowsPerPageTemplate="6,12,30,60,100"
+                             paginatorPosition="bottom"
+                             scrollable="true"
+                             scrollHeight="98%"
+                             paginator="true"
+                             resizableColumns="true"
+                             rowSelectMode="checkbox"
+                             value="#{BeanContato.contatos}"
+                             rowKey="#{Contato.pessoa.codigo}"
+                             selection="#{BeanContato.registroSelecionado}"
+                             emptyMessage="Registro não Encontrado"
+                             >
+
+                    <f:facet name="header">
+                        Consulta de Contato
+                    </f:facet>
+
+                    <p:column selectionMode="single" style="width:16px;text-align:center"/>
+
+                    <p:column width="10%" headerText="Código">
+                        <h:outputLabel value="#{Contato.pessoa.codigo}" />
+                    </p:column>
+
+                    <p:column headerText="Nome Pessoa">
+                        <h:outputLabel value="#{Contato.pessoa.nome}" />
+                    </p:column>
+                    
+                    <p:column width="15%" headerText="Nro. Telefone">
+                        <h:outputLabel value="#{Contato.numeroTelefone}" />
+                    </p:column>
+                    
+                    <p:column width="20%" headerText="E-mail">
+                        <h:outputLabel value="#{Contato.email}" />
+                    </p:column>
+
+                    <f:facet name="footer">
+                        
+                        <p:commandButton process="consulta_contato"
+                                         update=":form_contato:grid_man_contato_inclusao"
+                                         icon="ui-icon-circle-plus"
+                                         value="Incluir"
+                                         oncomplete="PF('dialog_manutencao_contato_inclusao').show()" 
+                        />
+                        
+                        <p:commandButton process="consulta_contato"
+                                         update=":form_contato:grid_man_contato"
+                                         icon="ui-icon-link"
+                                         value="Alterar"
+                                         oncomplete="PF('dialog_manutencao_contato').show()" 
+                        />
+                        
+                        <p:commandButton process="consulta_contato"
+                                         update=":form_contato:consulta_contato, :form_contato:message"
+                                         icon="ui-icon-circle-minus"
+                                         value="Excluir"
+                                         action="#{BeanContato.excluir}">
+                            <p:confirm header="Confirmação" message="Deseja realmente excluir registro?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                        
+                    </f:facet>
+
+                </p:dataTable>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+                
+                <p:dialog header="Alterar Contato" 
+                          widgetVar="dialog_manutencao_contato" 
+                          modal="false"
+                          showEffect="fade"
+                          hideEffect="fade"
+                          resizable="true"
+                          >
+
+                    <p:outputPanel id="grid_man_contato" style="text-align:center;">
+                        <p:panelGrid  columns="2" columnClasses="label,value">
+                            
+                            <h:outputText value="Pessoa:" />
+                            <p:selectOneMenu value="#{BeanContato.registroSelecionado.pessoa.codigo}" required="true" requiredMessage="Campo Pessoa é obrigatório">
+                                <f:selectItem itemLabel="Selecione..." itemValue="" />
+                                <f:selectItems value="#{BeanPessoa.pessoas}" var="listaPessoa" itemValue="#{listaPessoa.codigo}" itemLabel="#{listaPessoa.nome}" />
+                            </p:selectOneMenu>
+                            
+                            <h:outputText value="Telefone:" />
+                            <h:inputText value="#{BeanContato.registroSelecionado.numeroTelefone}"  />
+
+                            <h:outputText value="E-mail:" />
+                            <h:inputText value="#{BeanContato.registroSelecionado.email}" required="true" requiredMessage="Campo e-mail é obrigatório"/>
+
+                        </p:panelGrid>    
+                        <p:commandButton process="grid_man_contato"
+                                         update=":form_contato:message, :form_contato:consulta_contato"
+                                         value="Confirmar"
+                                         action="#{BeanContato.salvar}"
+                                         oncomplete="PF('dialog_manutencao_contato').hide()"
+                                         />
+                    </p:outputPanel>
+
+                </p:dialog>
+
+                
+                <p:dialog header="Incluir Contato" 
+                          widgetVar="dialog_manutencao_contato_inclusao" 
+                          modal="false"
+                          showEffect="fade"
+                          hideEffect="fade"
+                          resizable="true"
+                          >
+
+                    <p:outputPanel id="grid_man_contato_inclusao">
+                        <p:panelGrid  columns="2" columnClasses="label,value">
+                            
+                            <h:outputText value="Pessoa:" />
+                            <p:selectOneMenu value="#{BeanContato.registroNovo.pessoa.codigo}" required="true" requiredMessage="Campo Pessoa é obrigatório">
+                                <f:selectItem itemLabel="Selecione..." itemValue="" />
+                                <f:selectItems value="#{BeanPessoa.pessoas}" var="listaPessoa" itemValue="#{listaPessoa.codigo}" itemLabel="#{listaPessoa.nome}" />
+                            </p:selectOneMenu>
+                            
+                            <h:outputText value="Telefone:" />
+                            <h:inputText value="#{BeanContato.registroNovo.numeroTelefone}" />
+
+                            <h:outputText value="E-mail:" />
+                            <h:inputText value="#{BeanContato.registroNovo.email}" required="true" requiredMessage="Campo e-mail é obrigatório"/>
+
+                        </p:panelGrid>    
+                        <p:commandButton process="grid_man_contato_inclusao"
+                                         update=":form_contato:message, :form_contato:consulta_contato"
+                                         value="Confirmar"
+                                         action="#{BeanContato.salvarNovo}"
+                                         oncomplete="PF('dialog_manutencao_contato_inclusao').hide()"
+                                         />
+                    </p:outputPanel>
+
+                </p:dialog>
+                
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</html>

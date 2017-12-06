@@ -1,10 +1,13 @@
 package controller;
 
 import dao.DaoModule;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import model.Tema;
 
 /**
  *
@@ -16,9 +19,16 @@ public class Sessao {
     
     private HttpSession sessao;
     private static Sessao INSTANCE;
+    private String tema;
+    private List<String> temas;
     
-    private Sessao() {
+    public Sessao() {
         this.sessao = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+    }
+    
+    @PostConstruct
+    public void init() {
+        this.temas = Tema.getAllDisponiveis();
     }
     
     public static Sessao getInstance() {
@@ -26,6 +36,21 @@ public class Sessao {
             INSTANCE = new Sessao();
         }
         return INSTANCE;
+    }
+
+    public String getTema() {
+        if(this.tema == null) {
+            this.tema = Tema.getTemaDefault();
+        }
+        return tema;
+    }
+
+    public void setTema(String tema) {
+        this.tema = tema;
+    }
+
+    public List<String> getTemas() {
+        return temas;
     }
     
     public void atualizaModulo() {
@@ -56,5 +81,9 @@ public class Sessao {
     
     public String getAtributo(String nome) {
         return (String) this.sessao.getAttribute("codigo_modulo");
+    }
+    
+    public void salvaTema() {
+        ControllerPadrao.addMessageErro("Tema Alterado");
     }
 }

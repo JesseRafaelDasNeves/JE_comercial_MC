@@ -10,7 +10,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import model.Lista;
 import model.ModelPessoa;
-import org.primefaces.component.selectonelistbox.SelectOneListbox;
 import services.PessoaService;
 
 @ManagedBean(name = "BeanPessoa")

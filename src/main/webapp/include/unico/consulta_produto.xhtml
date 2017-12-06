@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" 
+      >
+    
+    <ui:composition template="/principal.xhtml">
+
+        <ui:define name="center">
+
+            <h:form id="form_produto" style="max-height: 100%;" >
+
+                <p:growl id="message" life="10000"  />
+
+                <p:dataTable id="consulta_produto"
+                             var="Produto" 
+                             rows="12"
+                             rowsPerPageTemplate="6,12,30,60,100"
+                             paginatorPosition="bottom"
+                             scrollable="true"
+                             scrollHeight="98%"
+                             paginator="true"
+                             resizableColumns="true"
+                             rowSelectMode="checkbox"
+                             value="#{BeanProduto.produtos}"
+                             rowKey="#{Produto.codigo}"
+                             selection="#{BeanProduto.registroSelecionado}"
+                             >
+
+                    <f:facet name="header">
+                        Consulta de Produto
+                    </f:facet>
+
+                    <p:column selectionMode="single" style="width:16px;text-align:center"/>
+
+                    <p:column width="10%" headerText="Código">
+                        <h:outputLabel value="#{Produto.codigo}" />
+                    </p:column>
+
+                    <p:column width="30%" headerText="Nome">
+                        <h:outputLabel value="#{Produto.nome}" />
+                    </p:column>
+                    
+                    <p:column headerText="Descrição">
+                        <h:outputLabel value="#{Produto.descricao}" />
+                    </p:column>
+
+                    <f:facet name="footer">
+                        
+                        <p:commandButton process="consulta_produto"
+                                         update=":form_produto:grid_man_produto_inclusao"
+                                         icon="ui-icon-circle-plus"
+                                         value="Incluir"
+                                         oncomplete="PF('dialog_manutencao_produto_inclusao').show()" 
+                        />
+                        
+                        <p:commandButton process="consulta_produto"
+                                         update=":form_produto:grid_man_produto"
+                                         icon="ui-icon-link"
+                                         value="Alterar"
+                                         oncomplete="PF('dialog_manutencao_produto').show()" 
+                        />
+                        
+                        <p:commandButton process="consulta_produto"
+                                         update=":form_produto:consulta_produto, :form_produto:message"
+                                         icon="ui-icon-circle-minus"
+                                         value="Excluir"
+                                         action="#{BeanProduto.excluir}">
+                            <p:confirm header="Confirmação" message="Deseja realmente excluir registro?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                        
+                    </f:facet>
+
+                </p:dataTable>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+                
+                <p:dialog header="Alterar Produto" 
+                          widgetVar="dialog_manutencao_produto" 
+                          modal="false"
+                          showEffect="fade"
+                          hideEffect="fade"
+                          resizable="true"
+                          >
+
+                    <p:outputPanel id="grid_man_produto" style="text-align:center;">
+                        <p:panelGrid  columns="2" columnClasses="label,value">
+                            <h:outputText value="Código:" />
+                            <h:inputText value="#{BeanProduto.registroSelecionado.codigo}" readonly="true" style="background-color: slategray;" />
+                            
+                            <h:outputText value="Nome:" />
+                            <h:inputText value="#{BeanProduto.registroSelecionado.nome}" required="true" requiredMessage="Campo nome é obrigatório" size="50" style="text-align: left;" />
+
+                            <h:outputText value="Descrição:" />
+                            <h:inputTextarea value="#{BeanProduto.registroSelecionado.descricao}" rows="5" cols="52" />
+
+                        </p:panelGrid>    
+                        <p:commandButton process="grid_man_produto"
+                                         update=":form_produto:message, :form_produto:consulta_produto"
+                                         value="Confirmar"
+                                         action="#{BeanProduto.salvar}"
+                                         oncomplete="PF('dialog_manutencao_produto').hide()"
+                                         />
+                    </p:outputPanel>
+
+                </p:dialog>
+
+                
+                <p:dialog header="Incluir Produto" 
+                          widgetVar="dialog_manutencao_produto_inclusao" 
+                          modal="false"
+                          showEffect="fade"
+                          hideEffect="fade"
+                          resizable="true"
+                          >
+
+                    <p:outputPanel id="grid_man_produto_inclusao" style="text-align:center;">
+                        <p:panelGrid  columns="2" columnClasses="label,value" style="text-align: left;">
+                            <h:outputText value="Código:" />
+                            <h:inputText value="#{BeanProduto.registroNovo.codigo}" readonly="true" style="background-color: slategray;" />
+
+                            <h:outputText value="Nome:" />
+                            <h:inputText  value="#{BeanProduto.registroNovo.nome}" required="true" requiredMessage="Campo nome é obrigatório" size="50" style="text-align: left;" />
+
+                            <h:outputText value="Descrição:" />
+                            <h:inputTextarea value="#{BeanProduto.registroNovo.descricao}" rows="5" cols="52" />
+
+                        </p:panelGrid>    
+                        <p:commandButton process="grid_man_produto_inclusao"
+                                         update=":form_produto:message, :form_produto:consulta_produto"
+                                         value="Confirmar"
+                                         action="#{BeanProduto.salvarNovo}"
+                                         oncomplete="PF('dialog_manutencao_produto_inclusao').hide()"
+                                         />
+                    </p:outputPanel>
+
+                </p:dialog>
+                
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</html>
+

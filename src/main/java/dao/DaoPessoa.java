@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.ArrayList;
+import javax.persistence.Query;
 import model.Lista;
 
 /**
@@ -15,5 +16,10 @@ public class DaoPessoa extends DaoUnico {
         oLista.add(new Lista(1, "Física"));
         oLista.add(new Lista(2, "Jurídica"));
         return oLista;
+    }
+
+    @Override
+    public Query getQueryAll() {
+        return this.EntityManager.createQuery("select pessoa from ModelPessoa pessoa order by pessoa.codigo asc");
     }
 }
