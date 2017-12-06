@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
@@ -11,6 +12,7 @@ public abstract class ControllerPadrao {
     public ControllerPadrao() {
         Sessao oSessao = Sessao.getInstance();
         oSessao.atualizaModulo();
+        this.validaSessaoUsuario();
     }
     
     public void mensagemInclusaoOk() {
@@ -49,5 +51,16 @@ public abstract class ControllerPadrao {
     public static void addMessageErro(String msg) {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg,  null);
         FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+    
+    private void validaSessaoUsuario() {
+        if(Sessao.getInstance().getUsuario().getPessoa().getCodigo() == 0) {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/JeComerciaMt/faces/structure/login.xhtml");
+                addMessageErro("Sessão Expirada Efetue login.");
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
     }
 }

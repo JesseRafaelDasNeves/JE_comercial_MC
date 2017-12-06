@@ -1,13 +1,19 @@
 package controller;
 
 import dao.DaoModule;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import model.ModelUsuario;
 import model.Tema;
+import services.UsuarioService;
 
 /**
  *
@@ -21,6 +27,10 @@ public class Sessao {
     private static Sessao INSTANCE;
     private String tema;
     private List<String> temas;
+    private ModelUsuario usuario;
+    
+    @ManagedProperty("#{usuarioService}")
+    private UsuarioService serviceUsuario;
     
     public Sessao() {
         this.sessao = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
@@ -53,6 +63,21 @@ public class Sessao {
         return temas;
     }
     
+    public void setServiceUsuario(UsuarioService service) {
+        this.serviceUsuario = service;
+    }
+    
+    public ModelUsuario getUsuario() {
+        if(this.usuario == null) {
+            this.usuario = new ModelUsuario();
+        }
+        return usuario;
+    }
+
+    public void setUsuario(ModelUsuario usuario) {
+        this.usuario = usuario;
+    }
+    
     public void atualizaModulo() {
         String modulo = ControllerPrincipal.getParametro("modulo");
         if(modulo != null && !modulo.trim().equals("")) {
@@ -83,7 +108,28 @@ public class Sessao {
         return (String) this.sessao.getAttribute("codigo_modulo");
     }
     
+    public String getAtributo2(String nome) {
+        return (String) this.sessao.getAttribute(nome);
+    }
+    
     public void salvaTema() {
         ControllerPadrao.addMessageErro("Tema Alterado");
+    }
+    
+    public void realizaAutenticacaoUsuario() {
+        ModelUsuario oUsuario = this.getUsuario();
+        oUsuario.setSenha(ModelUsuario.criptografaSenha(oUsuario.getSenha()));
+        ModelUsuario oUsuarioAutent = this.serviceUsuario.getUsuarioAutenticado(oUsuario);
+        
+        if(oUsuarioAutent != null) {
+            Sessao.getInstance().setUsuario(oUsuarioAutent);
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/JeComerciaMt/faces/principal.xhtml");
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        } else {
+            ControllerPadrao.addMessageErro("Login/Senha incorreto");
+        }
     }
 }

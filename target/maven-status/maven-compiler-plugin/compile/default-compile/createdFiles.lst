@@ -2,6 +2,7 @@ dao\DaoContato.class
 controller\ControllerProduto.class
 dao\DaoCrm.class
 model\ModelFornecedor_.class
+model\Tema.class
 services\FornecedorService.class
 model\ModelContato.class
 model\ModelPessoa_.class

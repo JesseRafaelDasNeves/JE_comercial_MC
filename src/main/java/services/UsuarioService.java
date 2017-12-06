@@ -36,4 +36,9 @@ public class UsuarioService {
         DaoUsuario oDaoUsuario = new DaoUsuario();
         return oDaoUsuario.excluir(oUsuario);
     }
+    
+    public ModelUsuario getUsuarioAutenticado(ModelUsuario oUsuario) {
+        DaoUsuario oDaoUsuario = new DaoUsuario();
+        return oDaoUsuario.getUsuarioAutenticado(oUsuario);
+    }
 }

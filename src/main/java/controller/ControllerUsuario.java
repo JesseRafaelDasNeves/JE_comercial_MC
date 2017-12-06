@@ -1,5 +1,6 @@
 package controller;
 
+import dao.DaoUsuario;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -11,9 +12,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import model.Lista;
 import model.ModelUsuario;
 import services.UsuarioService;
-import sun.security.provider.MD5;
 
 @ManagedBean(name = "BeanUsuario")
 @ViewScoped
@@ -22,6 +23,7 @@ public class ControllerUsuario extends ControllerPadrao implements Serializable 
     private List<ModelUsuario> usuarios;
     private ModelUsuario registroSelecionado;
     private ModelUsuario registroNovo;
+    private List<Lista> listaTipoUsuario;
     
     @ManagedProperty("#{usuarioService}")
     private UsuarioService service;
@@ -29,6 +31,7 @@ public class ControllerUsuario extends ControllerPadrao implements Serializable 
     @PostConstruct
     public void init() {
         this.usuarios = this.service.getAllRegistros();
+        this.listaTipoUsuario = DaoUsuario.getListaTipo();
     }
 
     public List<ModelUsuario> getUsuarios() {
@@ -43,6 +46,10 @@ public class ControllerUsuario extends ControllerPadrao implements Serializable 
         this.service = service;
     }
 
+    public List<Lista> getListaTipoUsuario() {
+        return listaTipoUsuario;
+    }
+    
     public ModelUsuario getRegistroSelecionado() {
         if(this.registroSelecionado == null) {
             this.registroSelecionado = new ModelUsuario();
@@ -101,15 +108,8 @@ public class ControllerUsuario extends ControllerPadrao implements Serializable 
     }
     
     private void setSenhaDefault(ModelUsuario oUsuario) {
-        String senhaDefault = "JEcomercial123456";
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(ControllerUsuario.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        BigInteger hash = new BigInteger(1, md.digest(senhaDefault.getBytes()));
- 
-        oUsuario.setSenha(String.format("%32x", hash));
+        String senhaDefault = "123";
+        oUsuario.setSenha(ModelUsuario.criptografaSenha(senhaDefault));
+        this.addMessage("Cadastro inicial do Usuário com senha padrão '123'.");
     }
 }

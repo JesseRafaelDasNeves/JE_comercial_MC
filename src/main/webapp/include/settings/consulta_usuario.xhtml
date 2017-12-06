@@ -99,6 +99,12 @@
                                 <f:selectItems value="#{BeanPessoa.pessoas}" var="listaPessoa" itemValue="#{listaPessoa.codigo}" itemLabel="#{listaPessoa.nome}" />
                             </p:selectOneMenu>
                             
+                            <h:outputText value="Tipo:" />
+                            <p:selectOneMenu value="#{BeanUsuario.registroSelecionado.tipo}" required="true" requiredMessage="Campo Tipo é obrigatório">
+                                <f:selectItem itemLabel="Selecione..." itemValue="" />
+                                <f:selectItems value="#{BeanUsuario.listaTipoUsuario}" var="listaTipo" itemValue="#{listaTipo.codigo}" itemLabel="#{listaTipo.valor}" />
+                            </p:selectOneMenu>
+                            
                             <h:outputText value="Login:" />
                             <h:inputText  value="#{BeanUsuario.registroSelecionado.login}" required="true" requiredMessage="Campo login é obrigatório" size="100" />
 
@@ -129,6 +135,12 @@
                             <p:selectOneMenu value="#{BeanUsuario.registroNovo.pessoa.codigo}" required="true" requiredMessage="Campo Pessoa é obrigatório">
                                 <f:selectItem itemLabel="Selecione..." itemValue="" />
                                 <f:selectItems value="#{BeanPessoa.pessoas}" var="listaPessoa" itemValue="#{listaPessoa.codigo}" itemLabel="#{listaPessoa.nome}" />
+                            </p:selectOneMenu>
+                            
+                            <h:outputText value="Tipo:" />
+                            <p:selectOneMenu value="#{BeanUsuario.registroNovo.tipo}" required="true" requiredMessage="Campo Tipo é obrigatório">
+                                <f:selectItem itemLabel="Selecione..." itemValue="" />
+                                <f:selectItems value="#{BeanUsuario.listaTipoUsuario}" var="listaTipo" itemValue="#{listaTipo.codigo}" itemLabel="#{listaTipo.valor}" />
                             </p:selectOneMenu>
                             
                             <h:outputText value="Login:" />
