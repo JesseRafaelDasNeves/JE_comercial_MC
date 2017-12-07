@@ -1,4 +1,6 @@
 dao\DaoContato.class
+controller\ControllerLogin.class
+model\ModelPedido.class
 controller\ControllerProduto.class
 dao\DaoCrm.class
 model\ModelFornecedor_.class

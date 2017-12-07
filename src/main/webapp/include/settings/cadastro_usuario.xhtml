@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Cadastro Usuário</title>
+    </h:head>
+    <h:body>
+
+        <h:form id="form_cad_usuario"  >
+            <p:outputPanel id="grid_man_cad_usuario_externo" style="text-align:center;">
+                <p:panelGrid  columns="2" columnClasses="label,value" >
+
+                    <h:outputText value="Tipo:" />
+                    <p:selectOneMenu id="tipo_pessoa" value="#{BeanLogin.registroNovo.pessoa.tipo}" required="true" requiredMessage="Campo tipo é obrigatório">
+                        <f:selectItem itemLabel="Selecione..." itemValue="" />
+                        <f:selectItems value="#{BeanLogin.listaTipoPessoa}" var="listaTipo" itemValue="#{listaTipo.codigo}" itemLabel="#{listaTipo.valor}" />
+                    </p:selectOneMenu>
+
+                    <h:outputText value="Nome:" />
+                    <h:inputText value="#{BeanLogin.registroNovo.pessoa.nome}" style="width: 200px;" required="true" requiredMessage="Campo nome é obrigatório"/>
+
+                    <h:outputText value="CPF/CNPJ:" />
+                    <h:inputText value="#{BeanLogin.registroNovo.pessoa.cpfCnpj}" required="true" requiredMessage="Campo cpf é obrigatório" />
+
+                    <h:outputText value="Login:" />
+                    <h:inputText  value="#{BeanLogin.registroNovo.login}" required="true" requiredMessage="Campo login é obrigatório" size="50" />
+
+                    <h:outputText value="Senha:" />
+                    <p:password value="#{BeanLogin.registroNovo.senha}" required="true" requiredMessage="Campo senha é obrigatório"/>
+
+                    <f:facet name="footer">
+                        <p:commandButton process="grid_man_cad_usuario_externo"
+                                         value="Confirmar"
+                                         action="#{BeanLogin.salvarNovoUsuario}"
+                                         />
+
+                    </f:facet>
+                </p:panelGrid>    
+            </p:outputPanel>
+        </h:form>
+
+    </h:body>
+</html>
+

@@ -1,5 +1,6 @@
 package controller;
 
+import dao.DaoPessoa;
 import dao.DaoUsuario;
 import java.io.Serializable;
 import java.util.List;
@@ -87,6 +88,16 @@ public class ControllerUsuario extends ControllerPadrao implements Serializable 
         } else {
             this.mensagemInclusaoErro();
         }
+    }
+    
+    public void salvarNovoLogin() {
+        ModelUsuario oUsuario = this.getRegistroNovo();
+        this.setSenhaDefault(oUsuario);
+        
+        DaoPessoa oDaoPessoa = new DaoPessoa();
+        oDaoPessoa.salvar(oUsuario.getPessoa());
+        
+        this.service.salvar(oUsuario);
     }
     
     public void excluir() {
